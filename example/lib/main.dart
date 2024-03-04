@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_android_info/flutter_android_info.dart';
-import 'package:flutter_android_info/flutter_android_info_platform_interface.dart';
 
 void main() {
   runApp(const MyApp());
