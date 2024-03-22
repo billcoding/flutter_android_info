@@ -45,9 +45,27 @@ public class FlutterAndroidInfo implements FlutterPlugin, MethodCallHandler {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_android_info");
         channel.setMethodCallHandler(this);
         final Context ctx = flutterPluginBinding.getApplicationContext();
-        androidId = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
-        apkMd5 = getApkMd5(ctx);
-        deviceId = getDeviceId();
+        if (androidId.equals("")) {
+            androidId = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
+        if (deviceId.equals("")) {
+            deviceId = getDeviceId();
+        }
+        if (apkMd5.equals("")) {
+           apkMd5 = getApkMd5(ctx);
+        }
+        dLog();
+    }
+
+    private static void dLog(){
+        Log.d("FlutterAndroidInfo", "versionRelease: " + versionRelease);
+        Log.d("FlutterAndroidInfo", "brand: " + brand);
+        Log.d("FlutterAndroidInfo", "model: " + model);
+        Log.d("FlutterAndroidInfo", "device: " + device);
+        Log.d("FlutterAndroidInfo", "buildId: " + buildId);
+        Log.d("FlutterAndroidInfo", "androidId: " + androidId);
+        Log.d("FlutterAndroidInfo", "deviceId: " + deviceId);
+        Log.d("FlutterAndroidInfo", "apkMd5: " + apkMd5);
     }
 
     @Override
@@ -90,7 +108,7 @@ public class FlutterAndroidInfo implements FlutterPlugin, MethodCallHandler {
     }
 
     private static String getDeviceId() {
-        return Base64.getEncoder().encodeToString((deviceId + buildId).getBytes());
+        return Base64.getEncoder().encodeToString((buildId + "_" + androidId).getBytes());
     }
 
     private static String getBuildId(String delimiter) {
@@ -114,7 +132,7 @@ public class FlutterAndroidInfo implements FlutterPlugin, MethodCallHandler {
 
             // 获取应用程序的根目录
             String apkPath = applicationInfo.sourceDir;
-            Log.d("getApkMd5", "apkPath：" + apkPath);
+            Log.d("FlutterAndroidInfo", "apkPath: " + apkPath);
 
             // 创建一个文件输入流对象
             FileInputStream fis = new FileInputStream(apkPath);
@@ -127,9 +145,9 @@ public class FlutterAndroidInfo implements FlutterPlugin, MethodCallHandler {
             }
             apkMd5 = byteArrayToHexString(md.digest()).toLowerCase();
         } catch (Exception ex) {
-            Log.d("getApkMd5", "error：" + ex.getMessage());
+            Log.d("FlutterAndroidInfo", "error：" + ex.getMessage());
         }
-        Log.d("getApkMd5", "current apk md5：" + apkMd5);
+        Log.d("FlutterAndroidInfo", "current apk md5: " + apkMd5);
         return apkMd5;
     }
 
