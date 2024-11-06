@@ -9,3 +9,7 @@
 ## 1.0.2
 
 * Fix AndroidManifest.xml
+
+## 1.1.0
+
+* Refactor Android ID using [OAID](https://github.com/gzu-liyujiang/Android_CN_OAID)
